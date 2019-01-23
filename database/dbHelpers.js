@@ -7,6 +7,9 @@ module.exports = {
   findUsername: user => {
     return db('users').where({username: user}).first();
   },
+  findUserDepartment: department => {
+    return db('users').where({department: department});
+  },
   findUsers: () => {
     return db('users')
   }

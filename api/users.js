@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 });
 
 // REGISTER A USER
-router.post("/register", (req, res) => {
+router.post("/register", (req, res, next) => {
   const user = req.body;
   user.password = bcrypt.hashSync(user.password, 14);
   db.insert(user)
@@ -21,7 +21,7 @@ router.post("/register", (req, res) => {
       if (err.errno === 19) {
         res.status(400).json({ message: "username already taken" });
       } else {
-        res.status(500).send(err);
+        next(err);
       }
     });
 });
@@ -51,7 +51,7 @@ router.post("/login", (req, res) => {
 
       if (user && bcrypt.compareSync(userCred.password, user.password)) {
         const token = generateToken(req.body);
-        res.status(200).json({ message: `welcome ${user.username}`, token });
+        res.json({ message: `welcome ${user.username}`, token });
       } else {
         res.status(401).json({ message: "You shall not pass!" });
       }
@@ -92,8 +92,17 @@ function checkDepartment(department) {
 // PROTECTED USER ROUTE
 router.get("/users", protected, (req, res) => {
   db.findUsers()
-    .then(users => res.status(200).json(users))
+    .then(users => res.json(users))
     .catch(err => res.status(500).json(err));
 });
+
+// VIEW USERS OF YOUR DEPARTMENT
+router.get('/users/department', protected, (req, res, next) => {
+  console.log("TOKEN", req.decodedToken);
+  
+  db.findUserDepartment(req.decodedToken.department)
+  .then(users => res.json(users))
+  .catch(err => next(err))
+})
 
 module.exports = router;
