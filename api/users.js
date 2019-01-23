@@ -16,7 +16,11 @@ router.post("/register", (req, res, next) => {
   const user = req.body;
   user.password = bcrypt.hashSync(user.password, 14);
   db.insert(user)
-    .then(ids => res.status(201).json({ id: ids[0] }))
+    .then(ids => {
+      const token = generateToken(req.body);
+        // res.json({ message: `welcome ${user.username}`, token });
+      res.status(201).json({ message: `welcome ${user.username}`, token })
+  })
     .catch(err => {
       if (err.errno === 19) {
         res.status(400).json({ message: "username already taken" });
