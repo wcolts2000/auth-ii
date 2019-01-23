@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const db = require("../database/dbHelpers");
-const jwt = require("jsonwebtoken");
+const auth = require("./auth");
 
 const router = express.Router();
 
@@ -17,8 +17,7 @@ router.post("/register", (req, res, next) => {
   user.password = bcrypt.hashSync(user.password, 14);
   db.insert(user)
     .then(ids => {
-      const token = generateToken(req.body);
-        // res.json({ message: `welcome ${user.username}`, token });
+      const token = auth.generateToken(req.body);
       res.status(201).json({ message: `welcome ${user.username}`, token })
   })
     .catch(err => {
@@ -30,31 +29,13 @@ router.post("/register", (req, res, next) => {
     });
 });
 
-// Generate Token for User
-function generateToken(user) {
-  const payload = {
-    username: user.username,
-    department: user.department
-  };
-
-  const secret = process.env.JWT_SECRET;
-
-  const options = {
-    expiresIn: "60m"
-  };
-
-  return jwt.sign(payload, secret, options);
-}
-
 // LOGIN ROUTE
 router.post("/login", (req, res) => {
   const userCred = req.body;
   db.findUsername(userCred.username)
     .then(user => {
-      console.log("user", user);
-
       if (user && bcrypt.compareSync(userCred.password, user.password)) {
-        const token = generateToken(req.body);
+        const token = auth.generateToken(req.body);
         res.json({ message: `welcome ${user.username}`, token });
       } else {
         res.status(401).json({ message: "You shall not pass!" });
@@ -63,47 +44,15 @@ router.post("/login", (req, res) => {
     .catch(err => res.status(500).json({ message: "You shall not pass!" }));
 });
 
-// PROTECTED MIDDLEWARE FUNCTION
-function protected(req, res, next) {
-  const token = req.headers.authorization;
-
-  if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-      if (err) {
-        res.status(401).json({ message: "invalid token" });
-      } else {
-        req.decodedToken = decodedToken;
-        next();
-      }
-    });
-  } else {
-    res.status(401).json({ message: "no token provided" });
-  }
-}
-
-// Check Department
-function checkDepartment(department) {
-  return function(req, res, next) {
-    if (req.decodedToken.department.includes(department)) {
-      next();
-    } else {
-      res
-        .status(403)
-        .json({ message: `NOT AUTHORIZED, ${department} members only` });
-    }
-  };
-}
 // PROTECTED USER ROUTE
-router.get("/users", protected, (req, res) => {
+router.get("/users", auth.protected, (req, res) => {
   db.findUsers()
     .then(users => res.json(users))
     .catch(err => res.status(500).json(err));
 });
 
 // VIEW USERS OF YOUR DEPARTMENT
-router.get('/users/department', protected, (req, res, next) => {
-  console.log("TOKEN", req.decodedToken);
-  
+router.get('/users/department', auth.protected, (req, res, next) => {
   db.findUserDepartment(req.decodedToken.department)
   .then(users => res.json(users))
   .catch(err => next(err))
