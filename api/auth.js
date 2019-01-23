@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 module.exports = {
   generateToken: function(user) {
     const payload = {
+      sub: user.id,
       username: user.username,
       department: user.department
     };
