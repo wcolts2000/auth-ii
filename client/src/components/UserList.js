@@ -1,5 +1,5 @@
-import React, { Component } from "react";
 import axios from "axios";
+import React, { Component } from "react";
 import styled from "styled-components";
 
 const User = styled.div`
@@ -15,6 +15,7 @@ const User = styled.div`
 
   &:hover {
     opacity: 0.8;
+    color: darkgreen;
   }
 
   & > p,
@@ -35,7 +36,7 @@ export default class UserList extends Component {
   };
 
   componentDidMount = () => {
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("jwt");
     axios({
       method: "get",
       url: "http://localhost:8081/api/users",

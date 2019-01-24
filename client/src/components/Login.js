@@ -1,7 +1,7 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
 
 const Form = styled.form`
   display: flex;
@@ -16,24 +16,37 @@ class Login extends Component {
   state = {
     username: "",
     password: "",
-    department: ""
+    error: false
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const user = this.state;
+    const user = {
+      username: this.state.username,
+      password: this.state.password
+    };
     if (user.username && user.password) {
       axios
         .post("http://localhost:8081/api/login", user)
         .then(res => {
           if (res.status === 200) {
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("jwt", res.data.token);
             this.props.history.push("/users");
           } else {
             return null;
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          if (err) {
+            this.setState({ error: true });
+            setTimeout(() => {
+              this.setState({ error: false });
+            }, 2000);
+            console.log(err);
+          } else {
+            console.error(err);
+          }
+        });
     } else {
       return null;
     }
@@ -43,9 +56,11 @@ class Login extends Component {
     this.setState({ [name]: value });
   };
   render() {
+    const { error } = this.state;
     return (
       <>
         <h1> __Login__</h1>
+        {error && <h3>Incorrect Username/Password</h3>}
         <Form onSubmit={this.handleSubmit}>
           <input
             name="username"
@@ -54,14 +69,6 @@ class Login extends Component {
             onChange={this.handleChange}
             autoComplete="username"
             value={this.state.username}
-          />
-          <input
-            name="department"
-            placeholder="department..."
-            type="text"
-            autoComplete="department"
-            onChange={this.handleChange}
-            value={this.state.department}
           />
           <input
             name="password"
