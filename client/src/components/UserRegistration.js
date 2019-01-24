@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
-axios.defaults.withCredentials = true;
 
 const Form = styled.form`
   display: flex;

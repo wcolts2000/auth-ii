@@ -18,6 +18,10 @@ const Nav = styled.nav`
     text-decoration: none;
     text-transform: uppercase;
     margin-right: 20px;
+
+    &.active {
+      color: aqua;
+    }
   }
 `;
 

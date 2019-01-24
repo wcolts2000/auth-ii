@@ -21,6 +21,7 @@ const GlobalStyles = createGlobalStyle`
     text-align: center;
     box-sizing: border-box;
     width: 100%;
+    background: papayawhip;
   }
  button {
     padding: 15px 25px;
@@ -55,11 +56,15 @@ const GlobalStyles = createGlobalStyle`
     padding-left: 35px;
     font-size: 20px;
     border: none;
-    background: tan;
+    background: papayawhip;
     border-bottom: 2px dashed #0f0f0f;
 
     &:placeholder-shown, ::-webkit-input-placeholder {
       color: #0f0f0f;
+    }
+
+    &:active, &:focus {
+      outline: none;
     }
   }
 `;
