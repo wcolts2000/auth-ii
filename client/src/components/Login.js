@@ -67,6 +67,7 @@ class Login extends Component {
         {error && <h3>Incorrect Username/Password</h3>}
         <Form onSubmit={this.handleSubmit}>
           <input
+            required
             name="username"
             placeholder="username..."
             type="text"
@@ -75,6 +76,7 @@ class Login extends Component {
             value={this.state.username}
           />
           <input
+            required
             name="password"
             placeholder="password..."
             type="password"

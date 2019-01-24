@@ -151,7 +151,7 @@ class App extends Component {
       <>
         <GlobalStyles />
         <Navbar logout={this.logout}/>
-        {error && <div>ERROR: {error}</div>}
+        {error && <div style={{ padding: "80px", fontSize: "22px"}}>ERROR: {error}</div>}
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route path="/register" render={props => <UserRegistration {...props} handleLogin={this.handleLogin} />} />

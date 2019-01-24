@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const User = styled.div`
@@ -67,6 +68,8 @@ export default class UserList extends Component {
       return (
         <div>
           <h3>Loading...</h3>
+          <p>Has it been a while since you logged in?</p>
+          <Link to="/login">Login</Link>
         </div>
       );
     }

@@ -53,10 +53,9 @@ class UserRegistration extends Component {
           setTimeout(() => {
             this.setState({
               username: "",
-              department: "",
-              password: "",
               error: ""
             });
+            this.username.focus();
           }, 2000);
           console.error(err);
         });
@@ -76,6 +75,10 @@ class UserRegistration extends Component {
         {error && <h3>that username is taken</h3>}
         <Form onSubmit={this.handleSubmit}>
           <input
+            required
+            ref={input => {
+              this.username = input;
+            }}
             name="username"
             placeholder="username..."
             autoComplete="username"
@@ -84,6 +87,7 @@ class UserRegistration extends Component {
             value={this.state.username}
           />
           <input
+            required
             name="department"
             placeholder="department..."
             type="text"
@@ -92,6 +96,7 @@ class UserRegistration extends Component {
             value={this.state.department}
           />
           <input
+            required
             name="password"
             placeholder="password..."
             type="password"
