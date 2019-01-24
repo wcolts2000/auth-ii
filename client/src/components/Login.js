@@ -1,4 +1,5 @@
 import axios from "axios";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import styled from "styled-components";
@@ -98,5 +99,12 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
+  handleLogin: PropTypes.func.isRequired
+};
 
 export default withRouter(Login);

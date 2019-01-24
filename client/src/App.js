@@ -7,6 +7,7 @@ import UserList from "./components/UserList";
 import Login from "./components/Login";
 import axios from "axios";
 import Navbar from "./components/Navbar";
+import PropTypes from 'prop-types';
 
 axios.defaults.withCredentials = true;
 
@@ -98,6 +99,9 @@ const ProtectedRoute = ({
   );
 };
 class App extends Component {
+  static propTypes={
+
+  }
   state={
     loggedIn: false
   };
@@ -162,5 +166,11 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
+};
 
 export default withRouter(App);

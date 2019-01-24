@@ -1,4 +1,5 @@
 import axios from "axios";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -75,3 +76,9 @@ export default class UserList extends Component {
     }
   }
 }
+
+UserList.propTypes = {
+  history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired
+};
