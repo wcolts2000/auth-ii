@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const Nav = styled.nav`
@@ -33,9 +33,9 @@ const NavLeft = styled.div`
 function Navbar(props) {
   return (
     <Nav>
-      <Link to="/">
+      <NavLink exact to="/">
         <p>DepartmentMonitor.com</p>
-      </Link>
+      </NavLink>
       <NavLeft>
         <NavLink to="/register">Register</NavLink>
         <NavLink to="/login">Login</NavLink>

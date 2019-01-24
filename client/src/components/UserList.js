@@ -69,8 +69,11 @@ export default class UserList extends Component {
       return (
         <div>
           <h3>Loading...</h3>
-          <p>Has it been a while since you logged in?</p>
-          <Link to="/login">Login</Link>
+          <p>Taking too long? Has it been a while since you logged in?</p>
+          <p>Try logging in again</p>
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
         </div>
       );
     }

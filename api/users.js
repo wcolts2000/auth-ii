@@ -18,8 +18,8 @@ router.post("/register", (req, res, next) => {
   db.insert(user)
     .then(ids => {
       const token = auth.generateToken(req.body);
-      res.status(201).json({ message: `welcome ${user.username}`, token })
-  })
+      res.status(201).json({ message: `welcome ${user.username}`, token });
+    })
     .catch(err => {
       if (err.errno === 19) {
         res.status(400).json({ message: "username already taken" });
@@ -35,7 +35,7 @@ router.post("/login", (req, res) => {
   db.findUsername(userCred.username)
     .then(user => {
       if (user && bcrypt.compareSync(userCred.password, user.password)) {
-        const token = auth.generateToken(req.body);
+        const token = auth.generateToken(user);
         res.json({ message: `welcome ${user.username}`, token });
       } else {
         res.status(401).json({ message: "You shall not pass!" });
@@ -52,10 +52,10 @@ router.get("/users", auth.protected, (req, res) => {
 });
 
 // VIEW USERS OF YOUR DEPARTMENT
-router.get('/users/department', auth.protected, (req, res, next) => {
+router.get("/users/department", auth.protected, (req, res, next) => {
   db.findUserDepartment(req.decodedToken.department)
-  .then(users => res.json(users))
-  .catch(err => next(err))
-})
+    .then(users => res.json(users))
+    .catch(err => next(err));
+});
 
 module.exports = router;
