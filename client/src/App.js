@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { createGlobalStyle } from "styled-components";
-import { Route, Redirect, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import UserRegistration from "./components/UserRegistration";
 import HomePage from "./components/HomePage";
 import UserList from "./components/UserList";
@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import PropTypes from 'prop-types';
+import { ProtectedRoute } from './hoc/WithAuth';
 
 axios.defaults.withCredentials = true;
 
@@ -70,34 +71,7 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 `;
-const ProtectedRoute = ({
-  component: Comp,
-  loggedIn,
-  path,
-  ...rest
-}) => {
-  return (
-    <Route
-      path={path}
-      {...rest}
-      render={props => {
-        return loggedIn ? (
-          <Comp {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: {
-                prevLocation: path,
-                error: "You need to login first!"
-              }
-            }}
-          />
-        );
-      }}
-    />
-  );
-};
+
 class App extends Component {
   static propTypes={
 
