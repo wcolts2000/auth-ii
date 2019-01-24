@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { createGlobalStyle } from "styled-components";
-import { Route } from "react-router-dom";
+import { Route, Redirect, Switch, withRouter } from "react-router-dom";
 import UserRegistration from "./components/UserRegistration";
 import HomePage from "./components/HomePage";
 import UserList from "./components/UserList";
 import Login from "./components/Login";
 import axios from "axios";
 import Navbar from "./components/Navbar";
+
 axios.defaults.withCredentials = true;
 
 const GlobalStyles = createGlobalStyle`
@@ -68,22 +69,98 @@ const GlobalStyles = createGlobalStyle`
     }
   }
 `;
-
+const ProtectedRoute = ({
+  component: Comp,
+  loggedIn,
+  path,
+  ...rest
+}) => {
+  return (
+    <Route
+      path={path}
+      {...rest}
+      render={props => {
+        return loggedIn ? (
+          <Comp {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: {
+                prevLocation: path,
+                error: "You need to login first!"
+              }
+            }}
+          />
+        );
+      }}
+    />
+  );
+};
 class App extends Component {
+  state={
+    loggedIn: false
+  };
+
+  componentDidMount = () => {
+    const jwt = localStorage.getItem('jwt');
+    if(jwt) {
+      this.setState({loggedIn: true})
+    } else {return null}
+  }
+  
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if(prevState.error !== this.state.error) {
+              setTimeout(() => {
+                
+                this.setState({error: null})
+              }, 2000);
+
+    }
+  }
+  
+  logout = () => {
+    this.setState({
+      loggedIn: false
+    })
+    localStorage.removeItem('jwt');
+    this.props.history.push('/')
+  }
+
+
+  handleLogin = () => {
+    const { state = {} } = this.props.location;
+    const { prevLocation } = state;
+
+    this.setState(
+      {
+        loggedIn: true,
+      },
+      () => {
+        this.props.history.push(prevLocation || "/users");
+      },
+    );
+  };
+
   render() {
+    const { state = {} } = this.props.location || this.state;
+    const { error } = state;
+    
     return (
       <>
         <GlobalStyles />
-        <Navbar />
-        <div>
+        <Navbar logout={this.logout}/>
+        {error && <div>ERROR: {error}</div>}
+        <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route path="/register" component={UserRegistration} />
-          <Route path="/login" component={Login} />
-          <Route path="/users" component={UserList} />
-        </div>
+          <Route path="/register" render={props => <UserRegistration {...props} handleLogin={this.handleLogin} />} />
+          <Route path="/login" render={props => <Login {...props} handleLogin={this.handleLogin} />} />
+          <ProtectedRoute path="/users" loggedIn={this.state.loggedIn} component={UserList} />
+        </Switch>
       </>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

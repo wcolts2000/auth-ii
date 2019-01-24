@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 const Div = styled.div`
   background: #0f0f0f;
@@ -22,6 +22,9 @@ export default function HomePage() {
       </Link>
       <Link to="/login">
         <button>Login</button>
+      </Link>
+      <Link to="/users">
+        <button>Users</button>
       </Link>
     </Div>
   );

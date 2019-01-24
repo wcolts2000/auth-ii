@@ -13,12 +13,15 @@ const Form = styled.form`
 `;
 
 class UserRegistration extends Component {
-  state = {
-    username: "",
-    password: "",
-    department: "",
-    error: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: "",
+      department: "",
+      error: ""
+    };
+  }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -39,6 +42,7 @@ class UserRegistration extends Component {
               department: "",
               error: ""
             });
+            this.props.handleLogin();
             this.props.history.push("/users");
           } else {
             return null;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import styled from "styled-components";
 
 const Form = styled.form`
@@ -13,11 +13,14 @@ const Form = styled.form`
 `;
 
 class Login extends Component {
-  state = {
-    username: "",
-    password: "",
-    error: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: "",
+      error: false
+    };
+  }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -31,6 +34,7 @@ class Login extends Component {
         .then(res => {
           if (res.status === 200) {
             localStorage.setItem("jwt", res.data.token);
+            this.props.handleLogin();
             this.props.history.push("/users");
           } else {
             return null;
@@ -80,6 +84,14 @@ class Login extends Component {
           />
           <button>SUBMIT</button>
         </Form>
+        <h4>Haven't Signed Up Yet?</h4>
+        <h5>No Problem</h5>
+        <Link
+          to="/register"
+          style={{ textDecoration: "none", color: "#0f0f0f" }}
+        >
+          <button>Register Now</button>
+        </Link>
       </>
     );
   }

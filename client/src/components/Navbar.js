@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { Link, NavLink } from "react-router-dom";
+import styled from "styled-components";
 
 const Nav = styled.nav`
   padding: 20px;
@@ -29,7 +29,7 @@ const NavLeft = styled.div`
   margin-left: auto;
 `;
 
-function Navbar() {
+function Navbar(props) {
   return (
     <Nav>
       <Link to="/">
@@ -39,6 +39,15 @@ function Navbar() {
         <NavLink to="/register">Register</NavLink>
         <NavLink to="/login">Login</NavLink>
         <NavLink to="/users">Users</NavLink>
+        <p
+          style={{
+            color: "red",
+            cursor: "pointer"
+          }}
+          onClick={() => props.logout()}
+        >
+          LOGOUT
+        </p>
       </NavLeft>
     </Nav>
   );
