@@ -1,7 +1,5 @@
 import axios from "axios";
-import PropTypes from "prop-types";
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const User = styled.div`
@@ -32,21 +30,17 @@ const User = styled.div`
   }
 `;
 
-export default class UserList extends Component {
-  state = {
-    users: []
-  };
-
+export default class Department extends Component {
+  state = { users: [] };
   componentDidMount = () => {
-    let token = localStorage.getItem("jwt");
-    axios({
-      method: "get",
-      url: "http://localhost:8081/api/users",
+    const token = localStorage.getItem("jwt");
+    const options = {
       headers: {
-        Authorization: token
+        authorization: token
       }
-    })
-      // .get("http://localhost:8081/api/users", )
+    };
+    axios
+      .get("http://localhost:8081/api/users/department", options)
       .then(({ data }) => this.setState({ users: data }))
       .catch(err => console.log(err));
   };
@@ -55,12 +49,8 @@ export default class UserList extends Component {
     if (this.state.users.length) {
       return (
         <div>
-          <h1>__Users__</h1>
-          <Link to="/users/departments">
-            <button>Your Department</button>
-          </Link>
-          {this.state.users.map((user, i) => (
-            <User key={i}>
+          {this.state.users.map(user => (
+            <User key={user.id}>
               <p>Member #: {user.id}</p>
               <h2>Username: {user.username}</h2>
               <h3>Department: {user.department}</h3>
@@ -69,22 +59,7 @@ export default class UserList extends Component {
         </div>
       );
     } else {
-      return (
-        <div>
-          <h3>Loading...</h3>
-          <p>Taking too long? Has it been a while since you logged in?</p>
-          <p>Try logging in again</p>
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-        </div>
-      );
+      return <h2>Loading</h2>;
     }
   }
 }
-
-UserList.propTypes = {
-  history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
-};

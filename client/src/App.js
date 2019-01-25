@@ -9,6 +9,7 @@ import axios from "axios";
 import Navbar from "./components/Navbar";
 import PropTypes from 'prop-types';
 import { ProtectedRoute } from './hoc/WithAuth';
+import Department from "./components/Department";
 
 axios.defaults.withCredentials = true;
 
@@ -134,7 +135,8 @@ class App extends Component {
           <Route exact path="/" component={HomePage} />
           <Route path="/register" render={props => <UserRegistration {...props} handleLogin={this.handleLogin} />} />
           <Route path="/login" render={props => <Login {...props} handleLogin={this.handleLogin} />} />
-          <ProtectedRoute path="/users" loggedIn={this.state.loggedIn} component={UserList} />
+          <ProtectedRoute exact path="/users" loggedIn={this.state.loggedIn} component={UserList} />
+          <ProtectedRoute path="/users/departments" loggedIn={this.state.loggedIn} component={Department} />
         </Switch>
       </>
     );

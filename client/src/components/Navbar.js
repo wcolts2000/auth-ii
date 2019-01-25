@@ -39,7 +39,9 @@ function Navbar(props) {
       <NavLeft>
         <NavLink to="/register">Register</NavLink>
         <NavLink to="/login">Login</NavLink>
-        <NavLink to="/users">Users</NavLink>
+        <NavLink exact to="/users">
+          Users
+        </NavLink>
         <p
           style={{
             color: "red",
